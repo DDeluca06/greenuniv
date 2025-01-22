@@ -1,30 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Greensfield University - Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Greensfield Univerity - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./css/dashboard.css">
 </head>
-<body>
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <h1 class="text-center">University Dashboard</h1>
-      <h2 class="text-center">Welcome, <%= user.firstName %> <%= user.lastName %></h2>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Dashboard Overview</h5>
-          <p class="card-text">This is your university dashboard. You can view your courses, assignments, and grades here.</p>
-        </div>
+<body class="bg-gray-100">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-blue-600 text-white">
+      <div class="p-4">
+        <h1 class="text-2xl font-bold">Greensfield Univerity</h1>
+        <nav class="mt-6">
+          <a href="#" class="block py-2 px-4 rounded bg-blue-700">Dashboard</a>
+          <a href="#" class="block py-2 px-4 hover:bg-blue-700">Courses</a>
+          <a href="#" class="block py-2 px-4 hover:bg-blue-700">Assignments</a>
+          <a href="#" class="block py-2 px-4 hover:bg-blue-700">Announcements</a>
+          <a href="#" class="block py-2 px-4 hover:bg-blue-700">Settings</a>
+        </nav>
       </div>
-    </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6">
+      <header class="flex items-center justify-between mb-6">
+        <h2 class="text-3xl font-semibold">Dashboard</h2>
+        <div class="flex items-center">
+          <span class="mr-4">Welcome, Student</span>
+          <img src="https://via.placeholder.com/40" alt="Profile Picture" class="rounded-full">
+        </div>
+      </header>
+
+      <!-- Dashboard Content -->
+      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Cards -->
+        <div class="p-4 bg-white rounded shadow">
+          <h3 class="text-lg font-bold">Courses</h3>
+          <p>5 Active Courses</p>
+        </div>
+        <div class="p-4 bg-white rounded shadow">
+          <h3 class="text-lg font-bold">Assignments</h3>
+          <p>3 Due This Week</p>
+        </div>
+        <div class="p-4 bg-white rounded shadow">
+          <h3 class="text-lg font-bold">Announcements</h3>
+          <p>2 New</p>
+        </div>
+        <div class="p-4 bg-white rounded shadow">
+          <h3 class="text-lg font-bold">Messages</h3>
+          <p>4 Unread</p>
+        </div>
+      </section>
+
+      <!-- Announcements -->
+      <section class="mt-8">
+        <h3 class="text-2xl font-semibold mb-4">Announcements</h3>
+        <ul>
+          <li class="p-4 bg-white rounded shadow mb-4">
+            <h4 class="text-lg font-bold">New Semester Start</h4>
+            <p>Classes begin on February 1st.</p>
+          </li>
+          <li class="p-4 bg-white rounded shadow">
+            <h4 class="text-lg font-bold">Assignment Deadline</h4>
+            <p>Submit your projects by January 25th.</p>
+          </li>
+        </ul>
+      </section>
+    </main>
   </div>
-</div>
+  <script src="script.js"></script>
 </body>
 </html>

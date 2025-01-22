@@ -21,11 +21,12 @@
                             <form id="login-form" action="/login" method="POST">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email address:</label>
-                                <input type="email" class="form-control" id="email" placeholder="Enter email" required>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
                             </div>
+                            <div id="usernameError" class="error"></div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password:</label>
-                                <input type="password" class="form-control" id="password" placeholder="Password" required>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Login</button>
                             <button type="button" class="btn btn-link w-100 mt-2" data-bs-toggle="modal" data-bs-target="#signupModal">Sign up</button>
@@ -45,19 +46,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form action="/signup" method="POST">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Name:</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter name">
+                            <label for="signup-name" class="form-label">Name:</label>
+                            <input type="text" class="form-control" id="signup-name" name="username" placeholder="Enter name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email address:</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter email">
+                            <label for="signup-email" class="form-label">Email address:</label>
+                            <input type="email" class="form-control" id="signup-email" name="email" placeholder="Enter email" required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Password:</label>
-                            <input type="password" class="form-control" id="password" placeholder="Password">
+                            <label for="signup-password" class="form-label">Password:</label>
+                            <input type="password" class="form-control" id="signup-password" name="password" placeholder="Password" required>
                         </div>
+                        <div id="passwordError" class="error"></div>
                         <button type="submit" class="btn btn-primary w-100">Sign up</button>
                     </form>
                 </div>

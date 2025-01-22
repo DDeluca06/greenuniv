@@ -11,44 +11,52 @@ router.post("/login", async (req, res) => {
   try {
     const existingUserQuery = `SELECT * FROM users WHERE email = ?`;
     db.get(existingUserQuery, [email], async (err, existingUser) => {
-      if (err) return res.status(500).send("Internal Server Error");
+      if (err) return res.send("Internal Server Error");
 
-      if (!existingUser) return res.status(401).send("Invalid email or password.");
+      if (!existingUser) return res.send("Invalid email or password.");
 
-      if (existingUser.password_hash !== password) return res.status(401).send("Invalid email or password.");
+      const isValidPassword = await bcrypt.compare(password, existingUser.password);
+      if (!isValidPassword) return res.send("Invalid email or password.");
 
       req.session.user = existingUser;
-      res.status(200).send("Logged in successfully.");
+      req.session.isLoggedIn = true;
+      res.redirect("/dashboard");
     });
   } catch (error) {
     console.error("Error during login:", error);
-    res.status(500).send("Internal Server Error");
+    res.send("Internal Server Error");
   }
 });
 
 // Sign-Up Route
 router.post("/signup", async (req, res) => {
-  const { first_name, last_name, email, password } = req.body;
+  const { username, email, password } = req.body;
 
   try {
     const existingUserQuery = `SELECT * FROM users WHERE email = ?`;
     db.get(existingUserQuery, [email], async (err, existingUser) => {
-      if (err) return res.status(500).send("Internal Server Error");
+      if (err) return res.send("Internal Server Error");
 
-      if (existingUser) return res.status(409).send("Email already in use. Please use a different email.");
+      if (existingUser) {
+        console.log("User already exists:", existingUser); // Log existing user
+        return res.send("Email already in use. Please use a different email.");
+      }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const newUserQuery = `INSERT INTO users (first_name, last_name, email, password_hash) VALUES (?, ?, ?, ?)`;
+      const newUserQuery = `INSERT INTO users (username, email, password) VALUES (?, ?, ?)`;
 
-      db.run(newUserQuery, [first_name, last_name, email, hashedPassword, balance], function (err) {
-        if (err) return res.status(500).send("Internal Server Error");
+      db.run(newUserQuery, [username, email, hashedPassword], function (err) {
+        if (err) {
+          console.error("Error inserting user:", err.message);
+          return res.send("Internal Server Error");
+        }
 
-        res.status(201).send("User created successfully.");
+        res.send("User created successfully."); // Changed to simple response
       });
     });
   } catch (error) {
     console.error("Error during sign up:", error);
-    res.status(500).send("Internal Server Error");
+    res.send("Internal Server Error");
   }
 });
 
