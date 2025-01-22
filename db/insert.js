@@ -1,3 +1,6 @@
+// IGNORE THIS FILE, IMPORT TEST GONE WRONG
+// I HATE DEVELOPMENT WORK
+// THIS BLOWS
 import sqlite3 from 'sqlite3';
 
 // Open or create a SQLite database file

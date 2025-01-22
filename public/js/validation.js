@@ -16,6 +16,7 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
       usernameError.textContent = "Email is required.";
     }
     // Password validation (now with regex!)
+    // THAT DOESN'T WORK! IT'S A FEATURE, NOT A BUG, RELAX
     let passwordRegex =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (password === "") {
       passwordError.textContent = "Password is required";

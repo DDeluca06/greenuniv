@@ -7,7 +7,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
   const password = document.getElementById("password").value;
 
   try {
-    // Simulate an API call
+    // Call the API
     const response = await fetch("/login", {
       method: "POST",
       headers: {
@@ -29,7 +29,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
   }
 });
 
-// Function to show error message
+// Function to show error message that doesn't work because I HATE THIS CURSED LANGUAGE
 function showErrorMessage(message) {
   const errorMessage = document.getElementById("error-message");
   errorMessage.textContent = message;
