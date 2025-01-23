@@ -1,4 +1,5 @@
 // Validation Logic
+// Worst Code Ever Written?????
 document.getElementById("loginForm").addEventListener("submit", function (e) {
     e.preventDefault();
   
@@ -12,11 +13,12 @@ document.getElementById("loginForm").addEventListener("submit", function (e) {
     passwordError.textContent = "";
   
     // Username validation
+    // Email validation, actually, you lazy bum. Rename your elements.
     if (username.trim() === "") {
       usernameError.textContent = "Email is required.";
     }
     // Password validation (now with regex!)
-    // THAT DOESN'T WORK! IT'S A FEATURE, NOT A BUG, RELAX
+    // ^^ Doesn't work! It's a feature, not a bug. We don't want the user to make correct passwords, let them get breached, who cares?
     let passwordRegex =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (password === "") {
       passwordError.textContent = "Password is required";
