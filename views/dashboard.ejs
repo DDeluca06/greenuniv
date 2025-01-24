@@ -1,93 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Greensfield University - Dashboard</title>
-  <link type="text/css" href="/css/dashboard.css">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js" defer></script> 
-</head>
-<body class="bg-gray-100">
-  <div class="flex h-screen" x-data="() => window.dash"> <!-- Correctly reference dash object -->
-
-    <!-- Sidebar -->
-    <aside class="w-64 bg-blue-600 text-white">
-      <div class="p-4">
-        <h1 class="text-2xl font-bold">Greensfield University</h1>
-        <nav class="mt-6 space-y-2">
-          <button @click="navigateTo('dashboard')" class="block w-full text-left py-2 px-4 rounded" :class="currentPage === 'dashboard' ? 'bg-blue-700' : 'hover:bg-blue-700'">Dashboard</button>
-
-          <button @click="navigateTo('courses')" class="block w-full text-left py-2 px-4 rounded" :class="currentPage === 'courses' ? 'bg-blue-700' : 'hover:bg-blue-700'">Courses</button>
-          <button @click="navigateTo('assignments')" class="block w-full text-left py-2 px-4 rounded" :class="currentPage === 'assignments' ? 'bg-blue-700' : 'hover:bg-blue-700'">Assignments</button>
-          <button @click="navigateTo('announcements')" class="block w-full text-left py-2 px-4 rounded" :class="currentPage === 'announcements' ? 'bg-blue-700' : 'hover:bg-blue-700'">Announcements</button>
-          <button @click="navigateTo('settings')" class="block w-full text-left py-2 px-4 rounded" :class="currentPage === 'settings' ? 'bg-blue-700' : 'hover:bg-blue-700'">Settings</button>
-        </nav>
-      </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="flex-1 p-6">
-      <header class="flex items-center justify-between mb-6">
-        <h2 class="text-3xl font-semibold capitalize" x-text="currentPage"></h2>
-        <div class="flex items-center">
-          <span class="mr-4">Welcome, <%= user.username %></span>
-          <img src="https://pbs.twimg.com/profile_images/1414667972375982084/r-LtZd3r_400x400.jpg" alt="Profile Picture" class="rounded-full" width="40" height="40">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Greensfield University - Dashboard</title>
+    <link type="text/css" href="/css/dashboard.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org"></script>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Loading Spinner, uncomment to include! -->
+    <!-- <div id="loading-spinner" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+      <div class="loader ease-linear rounded-full border-4 border-t-4 border-white h-12 w-12"></div>
+    </div> -->
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-blue-600 text-white">
+        <div class="p-4">
+          <h1 class="text-2xl font-bold">Greensfield University</h1>
+          <nav class="mt-6 space-y-2">
+            <button hx-get="/partials/dash" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Dashboard</button>
+            <button hx-get="/partials/courses" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Courses</button>
+            <button hx-get="/partials/assignments" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Assignments</button>
+            <button hx-get="/partials/announcements" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Announcements</button>
+            <button hx-get="/partials/settings" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Settings</button>
+          </nav>
         </div>
-      </header>
+      </aside>
 
-      <!-- Page Content -->
-      <template x-if="currentPage === 'dashboard'" x-transition:enter="fade-enter" x-transition:enter-active="fade-enter-active" x-transition:leave="fade-leave" x-transition:leave-active="fade-leave-active">
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Cards -->
-        <div class="p-4 bg-white rounded shadow">
-          <h3 class="text-lg font-bold">Courses</h3>
-          <p>5 Active Courses</p>
-        </div>
-        <div class="p-4 bg-white rounded shadow">
-          <h3 class="text-lg font-bold">Assignments</h3>
-          <p>3 Due This Week</p>
-        </div>
-        <div class="p-4 bg-white rounded shadow">
-          <h3 class="text-lg font-bold">Announcements</h3>
-          <p>2 New</p>
-        </div>
-        <div class="p-4 bg-white rounded shadow">
-          <h3 class="text-lg font-bold">Messages</h3>
-          <p>4 Unread</p>
-        </div>
-      </section>
-      </template>
-
-      <template x-if="currentPage === 'courses'" x-transition:enter="fade-enter" x-transition:enter-active="fade-enter-active" x-transition:leave="fade-leave" x-transition:leave-active="fade-leave-active">
-        <section>
-          <h3 class="text-2xl font-semibold mb-4">Courses</h3>
-          <p>Here you can manage your courses.</p>
-        </section>
-      </template>
-
-      <template x-if="currentPage === 'assignments'" x-transition:enter="fade-enter" x-transition:enter-active="fade-enter-active" x-transition:leave="fade-leave" x-transition:leave-active="fade-leave-active">
-        <section>
-          <h3 class="text-2xl font-semibold mb-4">Assignments</h3>
-          <p>Here you can manage your assignments.</p>
-        </section>
-      </template>
-
-      <template x-if="currentPage === 'announcements'" x-transition:enter="fade-enter" x-transition:enter-active="fade-enter-active" x-transition:leave="fade-leave" x-transition:leave-active="fade-leave-active">
-        <section>
-          <h3 class="text-2xl font-semibold mb-4">Announcements</h3>
-          <p>Here are your announcements.</p>
-        </section>
-      </template>
-
-      <template x-if="currentPage === 'settings'" x-transition:enter="fade-enter" x-transition:enter-active="fade-enter-active" x-transition:leave="fade-leave" x-transition:leave-active="fade-leave-active">
-        <section>
-          <h3 class="text-2xl font-semibold mb-4">Settings</h3>
-          <p>Update your profile and preferences here.</p>
-        </section>
-      </template>
-    </main>
-  </div>
-</body>
-<script type="module" src="/js/alp.js" defer></script>
+      <!-- Main Content -->
+      <main class="flex-1 p-6" id="main-content">
+        <!-- Default Content: Render the "dash.ejs" partial here -->
+        <%- include('partials/dash') %>
+      </main>
+    </div>
+  </body>
+  <!-- <script src="/js/spinner.js"></script> --> <!-- Uncomment this line to include the spinner script! -->
 </html>

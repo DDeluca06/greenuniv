@@ -9,7 +9,7 @@ import apiroute from "./routes/api.js";
 import { fileURLToPath } from "url";
 import path from "path";
 import db from "./config/db.js";
-import { usertbl, coursestbl, taskstbl } from './db/init.js'; // Reduce clutter
+import { usertbl, coursestbl, taskstbl, announcementstbl } from './db/init.js'; // Reduce clutter
 /* -------------------------------- Constants ------------------------------- */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +35,7 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tailwindcss.com", "https://unpkg.com/htmx.org"],
       imgSrc: ["'self'", "data:", "https://pbs.twimg.com"],
       connectSrc: ["'self'"],
     },
@@ -56,6 +56,7 @@ db.serialize(() => {
     db.run(usertbl);
     db.run(taskstbl);
     db.run(coursestbl);
+    db.run(announcementstbl);
 });
 
 app.listen(PORT, async () => {

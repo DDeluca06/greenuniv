@@ -1,0 +1,29 @@
+<div class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-2xl font-bold mb-4">Assignments</h2>
+    <% if (typeof assignments !== 'undefined' && assignments.length > 0) { %>
+      <table class="w-full">
+        <thead>
+          <tr>
+            <th class="text-left">Title</th>
+            <th class="text-left">Course</th>
+            <th class="text-left">Due Date</th>
+            <th class="text-left">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% assignments.forEach(assignment => { %>
+            <tr>
+              <td><%= assignment.title %></td>
+              <td><%= assignment.course %></td>
+              <td><%= assignment.due_by %></td>
+              <td>
+                <button hx-get="/assignment/<%= assignment.id %>" hx-target="#main-content" class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">View</button>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p>No assignments available at the moment.</p>
+    <% } %>
+  </div>

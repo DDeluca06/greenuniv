@@ -1,4 +1,4 @@
-/* Welcome to my world of CSS, where we only have one entry */
+/* Welcome to my world of CSS, where nothing important has ever happened */
 html {
   scroll-behavior: smooth;
 }
@@ -20,4 +20,18 @@ html {
   opacity: 0;
   transform: translateY(-10px);
   transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.loader {
+  border-color: #3498db transparent transparent transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

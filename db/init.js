@@ -30,5 +30,12 @@ const usertbl = `
     )
 `;
 
+const announcementstbl = `
+CREATE TABLE IF NOT EXISTS announcements (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+)`;
 
-export { usertbl, coursestbl, taskstbl };
+export { usertbl, coursestbl, taskstbl, announcementstbl };

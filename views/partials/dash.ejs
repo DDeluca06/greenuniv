@@ -1,0 +1,25 @@
+<header class="flex items-center justify-between mb-6">
+    <h2 class="text-3xl font-semibold capitalize">Dashboard</h2>
+    <div class="flex items-center">
+      <span class="mr-4">Welcome, <%= user.username %></span>
+      <img src="https://pbs.twimg.com/profile_images/1414667972375982084/r-LtZd3r_400x400.jpg" alt="Profile Picture" class="rounded-full" width="40" height="40">
+    </div>
+  </header>
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="p-4 bg-white rounded shadow">
+      <h3 class="text-lg font-bold">Courses</h3>
+      <p>5 Active Courses</p>
+    </div>
+    <div class="p-4 bg-white rounded shadow">
+      <h3 class="text-lg font-bold">Assignments</h3>
+      <p>3 Due This Week</p>
+    </div>
+    <div class="p-4 bg-white rounded shadow">
+      <h3 class="text-lg font-bold">Announcements</h3>
+      <p>2 New</p>
+    </div>
+    <div class="p-4 bg-white rounded shadow">
+      <h3 class="text-lg font-bold">Messages</h3>
+      <p>4 Unread</p>
+    </div>
+  </section>  
