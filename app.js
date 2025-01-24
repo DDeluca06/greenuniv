@@ -51,7 +51,6 @@ app.use("/", routes);
 app.use("/", accroutes);
 app.use("/api", apiroute);
 /* --------------------------------- Database -------------------------------- */
-// Create the tables if they don't already exist
 db.serialize(() => {
     db.run(usertbl);
     db.run(taskstbl);

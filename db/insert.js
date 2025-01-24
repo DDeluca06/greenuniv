@@ -12,23 +12,23 @@ const db = new sqlite3.Database('database.db', (err) => {
   }
 });
 
-// Function to add a user
-function addUser(username, email, password, acctype = 'STUDENT') {
-  const insertUser = `
-  INSERT INTO users (username, email, password, acctype)
-  VALUES (?, ?, ?, ?)
-  `;
-  db.run(insertUser, [username, email, password, acctype], function (err) {
-    if (err) {
-      console.error('Error adding user:', err.message);
-    } else {
-      console.log(`User added with ID: ${this.lastID}`);
-    }
-  });
-}
+// // Function to add a user
+// function addUser(username, email, password, acctype = 'STUDENT') {
+//   const insertUser = `
+//   INSERT INTO users (username, email, password, acctype)
+//   VALUES (?, ?, ?, ?)
+//   `;
+//   db.run(insertUser, [username, email, password, acctype], function (err) {
+//     if (err) {
+//       console.error('Error adding user:', err.message);
+//     } else {
+//       console.log(`User added with ID: ${this.lastID}`);
+//     }
+//   });
+// }
 
-// Example usage: Add a new user
-addUser('John Smith', 'user@univ.com', 'password', 'STUDENT');
+// // Example usage: Add a new user
+// addUser('John Smith', 'user@univ.com', 'password', 'STUDENT');
 
 // Close the database connection
 process.on('exit', () => {

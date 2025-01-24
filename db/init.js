@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS tasks (
       title TEXT NOT NULL,
       description TEXT NOT NULL,
       due_by DATETIME,
-      instructor 
+      instructor TEXT,
       created_at TEXT DEFAULT CURRENT_TIMESTAMP
 )`;
 
@@ -26,9 +26,9 @@ const usertbl = `
       email TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      acctype TEXT NOT NULL CHECK (acctype IN ('STUDENT', 'FACILITATOR', 'TEACHER')) DEFAULT 'STUDENT'
-    )
-`;
+      acctype TEXT NOT NULL CHECK (acctype IN ('STUDENT', 'FACILITATOR', 'TEACHER')) DEFAULT 'STUDENT',
+      fees INTEGER DEFAULT 0
+);`
 
 const announcementstbl = `
 CREATE TABLE IF NOT EXISTS announcements (
