@@ -8,8 +8,8 @@ import accroutes from "./routes/accmanage.js";
 import apiroute from "./routes/api.js";
 import { fileURLToPath } from "url";
 import path from "path";
-import db from "./config/db.js";
-import { usertbl, coursestbl, taskstbl, announcementstbl } from './db/init.js'; // Reduce clutter
+import prisma from "./config/db.js"; // Updated to use Prisma
+
 /* -------------------------------- Constants ------------------------------- */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -51,12 +51,14 @@ app.use("/", routes);
 app.use("/", accroutes);
 app.use("/api", apiroute);
 /* --------------------------------- Database -------------------------------- */
-db.serialize(() => {
-    db.run(usertbl);
-    db.run(taskstbl);
-    db.run(coursestbl);
-    db.run(announcementstbl);
-});
+prisma.$connect()
+    .then(() => {
+        console.log('Connected to the database using Prisma.');
+    })
+    .catch((err) => {
+        console.error('Error connecting to the database:', err);
+    });
+
 
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);

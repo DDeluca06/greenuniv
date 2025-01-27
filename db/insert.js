@@ -1,16 +1,16 @@
 // IGNORE THIS FILE, IMPORT TEST GONE WRONG
 // I HATE DEVELOPMENT WORK
 // THIS BLOWS
-import sqlite3 from 'sqlite3';
+// import sqlite3 from 'sqlite3';
 
 // Open or create a SQLite database file
-const db = new sqlite3.Database('database.db', (err) => {
-  if (err) {
-    console.error('Error opening database:', err.message);
-  } else {
-    console.log('Connected to the SQLite database.');
-  }
-});
+// const db = new sqlite3.Database('database.db', (err) => {
+//   if (err) {
+//     console.error('Error opening database:', err.message);
+//   } else {
+//     console.log('Connected to the SQLite database.');
+//   }
+// });
 
 // // Function to add a user
 // function addUser(username, email, password, acctype = 'STUDENT') {
@@ -31,12 +31,16 @@ const db = new sqlite3.Database('database.db', (err) => {
 // addUser('John Smith', 'user@univ.com', 'password', 'STUDENT');
 
 // Close the database connection
-process.on('exit', () => {
-  db.close((err) => {
-    if (err) {
-      console.error('Error closing database:', err.message);
-    } else {
-      console.log('Database connection closed.');
-    }
-  });
-});
+// process.on('exit', () => {
+//   db.close((err) => {
+//     if (err) {
+//       console.error('Error closing database:', err.message);
+//     } else {
+//       console.log('Database connection closed.');
+//     }
+//   });
+// });
+
+// const droptbl = ``
+
+// export { droptbl };

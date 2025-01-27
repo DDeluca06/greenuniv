@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const dbDirectory = path.resolve(__dirname, '../db');
-const dbPath = path.resolve(dbDirectory, 'database.db');
+const dbPath = path.join(dbDirectory, 'database.db');
 
 /* -------------------------------- Database -------------------------------- */
 

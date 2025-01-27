@@ -1,0 +1,16 @@
+<div class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-2xl font-bold mb-4">Payments</h2>
+    <div class="space-y-4">
+      <% if (typeof payments !== 'undefined' && payments.length > 0) { %>
+        <% payments.forEach(payment => { %>
+          <div class="bg-gray-100 p-4 rounded-lg">
+            <h3 class="text-lg font-semibold"><%= payment.title %></h3>
+            <p class="text-gray-600"><%= payment.content %></p>
+            <p class="text-sm text-gray-500 mt-2">Posted on: <%= payment.created_at %></p>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>No payments available at the moment.</p>
+      <% } %>
+    </div>
+  </div>
