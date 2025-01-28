@@ -25,10 +25,11 @@ router.post("/login", async (req, res) => {
     if (!isValidPassword) return res.send("Invalid Email or Password.");
 
     req.session.user = {
-      id: existingUser.StudentID, // Store the user ID
+      id: existingUser.StudentID,
       Email: existingUser.Email,
       FirstName: existingUser.FirstName,
       LastName: existingUser.LastName,
+      isAdmin: existingUser.isAdmin
     };
     req.session.isLoggedIn = true;
 

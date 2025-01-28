@@ -24,9 +24,10 @@
             <button hx-get="/partials/assignments" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Assignments</button>
             <button hx-get="/partials/payments" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Payments</button>
             <button hx-get="/partials/settings" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Settings</button>
-            <% if (user && user.isAdmin === 'True') { %> <!-- Check if the user is an admin -->
-            <button hx-get="/partials/admin" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Admin</button>
-            <% } %> <!-- End of admin check -->
+            <% if (locals.user && user.isAdmin) { %> <!-- Admin check -->
+              <button hx-get="/partials/admin" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Admin</button>
+          <% } %>
+            <!-- End of admin check -->
           </nav>
         </div>
       </aside>
@@ -38,5 +39,6 @@
       </main>
     </div>
   </body>
-  <!-- <script src="/js/spinner.js"></script> --> <!-- Uncomment this line to include the spinner script! -->
+  <!-- <script src="/js/spinner.js"></script> -->
+  <!-- Uncomment this line to include the spinner script! -->
 </html>

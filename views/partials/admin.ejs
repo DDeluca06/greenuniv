@@ -1,0 +1,36 @@
+<div class="admin-dashboard">
+  <h1>Admin Dashboard</h1>
+  <span class="mr-4">You are signed in as: <%= user.FirstName %> <%= user.LastName %></span>
+  <div class="admin-actions">
+    <h2>Create User Account</h2>
+    <form action="/users" method="post">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username"><br><br>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email"><br><br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password"><br><br>
+      <input type="submit" value="Create User">
+    </form>
+  </div>
+  <div class="admin-actions">
+    <h2>Create Course</h2>
+    <form action="/courses" method="post">
+      <label for="course-name">Course Name:</label>
+      <input type="text" id="course-name" name="course-name"><br><br>
+      <label for="course-description">Course Description:</label>
+      <textarea id="course-description" name="course-description"></textarea><br><br>
+      <input type="submit" value="Create Course">
+    </form>
+  </div>
+  <div class="admin-actions">
+    <h2>Create Fee</h2>
+    <form action="/fees" method="post">
+      <label for="fee-name">Fee Name:</label>
+      <input type="text" id="fee-name" name="fee-name"><br><br>
+      <label for="fee-amount">Fee Amount:</label>
+      <input type="number" id="fee-amount" name="fee-amount"><br><br>
+      <input type="submit" value="Create Fee">
+    </form>
+  </div>
+</div>

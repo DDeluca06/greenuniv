@@ -26,7 +26,10 @@ router.get('/partials/:page', async (req, res) => {
 
     if (validPages.includes(page)) {
         try {
-            let data = {};
+            let data = {
+                user: req.session?.user || null // Always include user data
+            };
+            
             switch (page) {
                 case 'courses':
                     data.courses = await prisma.courses.findMany();
@@ -35,22 +38,22 @@ router.get('/partials/:page', async (req, res) => {
                     data.payments = await prisma.fees.findMany();
                     break;
                 case 'settings':
-                    if (req.session && req.session.user) {
+                case 'dash':
+                case 'dashboard':
+                    if (!req.session?.user) {
+                        return res.redirect('/');
+                    }
                     data.user = await prisma.students.findUnique({
                         where: { StudentID: req.session.user.id },
                     });
-
-                    } else {
-                        return res.redirect('/');
-                    }
                     break;
-                case 'dash':
-                case 'dashboard':
-                    if (req.session && req.session.user) {
-                        data.user = req.session.user;
-                    } else {
+                case 'admin':
+                    if (!req.session?.user?.isAdmin) {
                         return res.redirect('/');
                     }
+                    data.user = await prisma.students.findUnique({
+                        where: { StudentID: req.session.user.id },
+                    });
                     break;
             }
             return res.render(`partials/${page}`, data);
@@ -59,7 +62,6 @@ router.get('/partials/:page', async (req, res) => {
             return res.status(500).send('Internal Server Error');
         }
     } else {
-              // Ideally, we would flag and delete your account here for going to the wrong page, but my advisor said something about "client confidence" and "treating your users like human beings" - whatever that means.
         return res.status(404).send('<h1>404 - Page Not Found</h1>');
     }
 });
