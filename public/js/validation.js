@@ -1,34 +1,34 @@
-// Validation Logic
-// Worst Code Ever Written?????
-// Handle the sign-up form submission
-document.getElementById("signupModal").addEventListener("submit", function (e) {
-    e.preventDefault();
+const validateSignUp = (Email, password) => {
+  const EmailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 
-    let username = document.getElementById("signup-name").value;
-    let email = document.getElementById("signup-email").value;
-    let password = document.getElementById("signup-password").value;
-    let usernameError = document.getElementById("usernameError");
-    let passwordError = document.getElementById("passwordError");
+  if (!EmailRegex.test(Email)) {
+    return { valid: false, message: 'Invalid Email address' };
+  }
 
-    // Reset error messages
-    usernameError.textContent = "";
-    passwordError.textContent = "";
+  if (!passwordRegex.test(password)) {
+    return { valid: false, message: 'Password must be at least 8 characters, contain at least one uppercase letter, one lowercase letter, one number and one special character' };
+  }
 
-    // Username validation
-    if (username.trim() === "") {
-        usernameError.textContent = "Name is required.";
-    }
+  return { valid: true, message: 'Sign up successful' };
+};
 
-    // Password validation
-    if (password === "") {
-        passwordError.textContent = "Password is required.";
-    } else if (!passwordRegex.test(password)) {
-        passwordError.textContent =
-            "Password must be 8 characters long, include at least one uppercase, lowercase, number, and special character.";
-    }
+document.getElementById("signupModal").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent default form submission
 
-    // If there are no errors, proceed with form submission
-    if (usernameError.textContent === "" && passwordError.textContent === "") {
-        e.target.submit();
-    }
+  // Get Email and password values from the sign-up form
+  const Email = document.getElementById("signup-Email").value;
+  const password = document.getElementById("signup-password").value;
+
+  // Call the validation function for sign-up
+  const validationResult = validateSignUp(Email, password);
+
+  // Display error messages if validation fails
+  if (!validationResult.valid) {
+    document.getElementById("passwordError").innerText = validationResult.message;
+  } else {
+    // Clear any previous error messages
+    document.getElementById("passwordError").innerText = ""; 
+    this.submit(); // Submit the form if validation passes
+  }
 });

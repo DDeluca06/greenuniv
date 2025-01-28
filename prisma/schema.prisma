@@ -23,12 +23,12 @@ model Enrollments {
   CourseID       Int
   EnrollmentDate DateTime? @default(dbgenerated("CURRENT_DATE"))
   Grade          String?
-  Courses        Courses   @relation(fields: [CourseID], references: [CourseID], onDelete: Cascade, onUpdate: NoAction)
   Students       Students  @relation(fields: [StudentID], references: [StudentID], onDelete: Cascade, onUpdate: NoAction)
+  Courses        Courses   @relation(fields: [CourseID], references: [CourseID], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([StudentID, CourseID], map: "sqlite_autoindex_Enrollments_1")
-  @@index([CourseID], map: "idx_course_enrollments")
   @@index([StudentID], map: "idx_student_enrollments")
+  @@index([CourseID], map: "idx_course_enrollments")
 }
 
 model Fees {
@@ -51,8 +51,8 @@ model Payments {
   PaymentDate   DateTime? @default(dbgenerated("CURRENT_DATE"))
   AmountPaid    Float
   PaymentMethod String?
-  Fees          Fees      @relation(fields: [FeeID], references: [FeeID], onDelete: Cascade, onUpdate: NoAction)
   Students      Students  @relation(fields: [StudentID], references: [StudentID], onDelete: Cascade, onUpdate: NoAction)
+  Fees          Fees      @relation(fields: [FeeID], references: [FeeID], onDelete: Cascade, onUpdate: NoAction)
 
   @@index([StudentID], map: "idx_student_payments")
 }
@@ -61,14 +61,13 @@ model Students {
   StudentID        Int           @id @default(autoincrement())
   FirstName        String
   LastName         String
-  DateOfBirth      DateTime
   Email            String        @unique(map: "sqlite_autoindex_Students_1")
   Password         String
   PhoneNumber      String?
   Address          String?
-  UserType         String?       @default("Student")
+  isAdmin          Boolean       @default(false)
   EnrollmentStatus String?       @default("Active")
-  RegistrationDate DateTime?     @default(dbgenerated("CURRENT_DATE"))
+  RegistrationDate DateTime?     @default(now())
   Enrollments      Enrollments[]
   Fees             Fees[]
   Payments         Payments[]

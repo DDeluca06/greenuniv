@@ -13,7 +13,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ Email: email, Password: password }), // Updated to match server-side expectations
     });
 
     if (response.ok) {
@@ -29,7 +29,7 @@ document.getElementById("login-form").addEventListener("submit", async function 
   }
 });
 
-// Function to show error message that doesn't work because I HATE THIS CURSED LANGUAGE
+// Function to show error message
 function showErrorMessage(message) {
   const errorMessage = document.getElementById("error-message");
   errorMessage.textContent = message;

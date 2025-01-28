@@ -9,7 +9,6 @@ import apiroute from "./routes/api.js";
 import { fileURLToPath } from "url";
 import path from "path";
 import prisma from "./config/db.js"; // Updated to use Prisma
-
 /* -------------------------------- Constants ------------------------------- */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +34,7 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tailwindcss.com", "https://unpkg.com/htmx.org"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tailwindcss.com", "https://unpkg.com/htmx.org", "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"],
       imgSrc: ["'self'", "data:", "https://pbs.twimg.com"],
       connectSrc: ["'self'"],
     },

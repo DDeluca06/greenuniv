@@ -4,7 +4,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import prisma from "../config/db.js"; // Updated to use Prisma
 /* -------------------------------- Constants ------------------------------- */
-
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,9 +36,10 @@ router.get('/partials/:page', async (req, res) => {
                     break;
                 case 'settings':
                     if (req.session && req.session.user) {
-                        data.user = await prisma.students.findUnique({
-                            where: { id: req.session.user.id },
-                        });
+                    data.user = await prisma.students.findUnique({
+                        where: { StudentID: req.session.user.id },
+                    });
+
                     } else {
                         return res.redirect('/');
                     }
