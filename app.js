@@ -2,6 +2,7 @@
 import express from "express";
 import helmet from "helmet";
 import session from 'express-session';
+import ejsLint from "ejs-lint";
 import dotenv from 'dotenv';
 import routes from "./routes/index.js";
 import accroutes from "./routes/accmanage.js";
@@ -18,10 +19,10 @@ dotenv.config();
 /* --------------------------------- Middlewares -------------------------------- */
 // Set up session management
 app.use(session({
-  secret: process.env.SECRET,
+  secret: process.env.SECRET || "default_secret",
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }
+  saveUninitialized: false, // Prevent empty sessions
+  cookie: { secure: false, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 } // 24h session expiry
 }));
 // Helmet Config
 app.use(helmet({

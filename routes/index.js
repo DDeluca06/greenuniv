@@ -21,12 +21,16 @@ router.get('/', async (req, res) => {
 });
 
 router.get("/courses", async (req, res) => {
-    try {
+    if (!req.session.user) {
+        console.error("User session missing! Redirecting to login.");
+        return res.redirect("/");
+    }
 
-        const userId = req.session.userId; // Ensure session holds user ID
+    try {
+        const userId = req.session.user.id; // Ensure session holds user ID
         if (!userId) {
             console.error("No user ID found in session!");
-            return res.redirect("/login");
+            return res.redirect("/");
         }
 
         // Fetch student info including enrollments
@@ -44,12 +48,12 @@ router.get("/courses", async (req, res) => {
 
         if (!user) {
             console.error("User not found in database!");
-            return res.redirect("/login");
+            return res.redirect("/");
         }
 
         // ✅ Extract CourseIDs from the Enrollments array
         const enrolledCourseIds = user.Enrollments?.map(enrollment => enrollment.CourseID) || [];
-
+        console.log("User session:", req.session.user); // Debugging session data
         res.render("courses", {
             user: {
                 id: user.StudentID,
@@ -58,7 +62,7 @@ router.get("/courses", async (req, res) => {
                 LastName: user.LastName,
                 isAdmin: user.isAdmin,
                 isFacilitator: user.isFacilitator,
-                enrolledCourses: enrolledCourseIds  // ✅ Ensure enrolledCourses is included
+                enrolledCourses: enrolledCourseIds,  // ✅ Ensure enrolledCourses is included
             },
             courses,
         });
@@ -68,6 +72,33 @@ router.get("/courses", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+router.get("/edit-course/:id", async (req, res) => {
+    if (!req.session.user || !req.session.user.isFacilitator) {
+        return res.status(403).send("Forbidden: Only facilitators can edit courses.");
+    }
+
+    const courseId = parseInt(req.params.id, 10);
+    if (isNaN(courseId)) {
+        return res.status(400).send("Invalid course ID");
+    }
+
+    try {
+        const course = await prisma.courses.findUnique({
+            where: { CourseID: courseId },
+        });
+
+        if (!course) {
+            return res.status(404).send("Course not found");
+        }
+
+        res.render("editCourse", { course, user: req.session.user });
+    } catch (error) {
+        console.error("Error fetching course for editing:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 
 // Loading our other pages
 router.get('/partials/:page', async (req, res) => {
@@ -108,7 +139,9 @@ router.get('/partials/:page', async (req, res) => {
                     });
                     break;
             }
-            console.log('Data being passed to template:', data); // Add this log
+            // console.log('Data being passed to template:', data); // If you REALLY need to debug, uncomment this
+            // But it will make your console as useful as color-corrected streetlights for the colorblind.
+            // ^^ This sounded funnier when I was writing it. I'm still leaving it in, my corny jokes are amazing. 
             return res.render(`partials/${page}`, data);
         } catch (error) {
             console.error(`Error fetching data for ${page}:`, error);
@@ -143,6 +176,45 @@ router.get('/dashboard', async (req, res) => {
     } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).send('Internal Server Error');
+    }
+});
+
+router.get('/course/:id', async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+
+    const courseId = parseInt(req.params.id, 10);
+    if (isNaN(courseId)) {
+        return res.status(400).json({ error: 'Invalid course ID' });
+    }
+
+    try {
+        const course = await prisma.courses.findUnique({
+            where: { CourseID: courseId },
+            include: {
+                Enrollments: {
+                    include: { Students: true }
+                }
+            }
+        });
+
+        if (!course) {
+            return res.status(404).json({ error: 'Course not found' });
+        }
+
+        const enrolledStudents = course.Enrollments.map(enrollment => ({
+            StudentName: `${enrollment.Students.FirstName} ${enrollment.Students.LastName}`,
+        }));
+
+        res.render('partials/courseDetails', {
+            course,
+            enrolledStudents,
+            user: req.session.user // ✅ Ensure user is passed
+        });
+    } catch (error) {
+        console.error('Error fetching course details:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 

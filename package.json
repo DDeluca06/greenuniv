@@ -11,9 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@alpinejs/persist": "^3.14.8",
     "@prisma/client": "^6.3.0",
-    "alpinejs": "^3.14.8",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
@@ -26,6 +24,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.10",
+    "ejs-lint": "^2.0.1",
     "nodemon": "^3.1.9",
     "prisma": "^6.3.0",
     "tsx": "^4.19.2",

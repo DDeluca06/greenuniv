@@ -71,6 +71,7 @@ router.post("/enroll", async (req, res) => {
 
 // Courses creation route
 router.post("/courses", async (req, res) => {
+    
     console.log("Received request body:", req.body); // Debugging log
 
     const { courseName, courseDescription, courseCredits } = req.body;
@@ -90,6 +91,61 @@ router.post("/courses", async (req, res) => {
     } catch (error) {
         console.error("Database error:", error); // Log the specific error
         res.status(500).json({ error: "Failed to create course" });
+    }
+});
+
+router.get("/edit-course-form/:id", async (req, res) => {
+    if (!req.session.user || !req.session.user.isFacilitator) {
+        return res.status(403).send("Forbidden: Only facilitators can edit courses.");
+    }
+
+    const courseId = parseInt(req.params.id, 10);
+    if (isNaN(courseId)) {
+        return res.status(400).send("Invalid course ID");
+    }
+
+    try {
+        const course = await prisma.courses.findUnique({
+            where: { CourseID: courseId },
+        });
+
+        if (!course) {
+            return res.status(404).send("Course not found");
+        }
+
+        res.render("partials/editCourseForm", { course });
+    } catch (error) {
+        console.error("Error fetching course for editing:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+router.post("/courses/update", async (req, res) => {
+    if (!req.session.user || !req.session.user.isFacilitator) {
+        return res.status(403).json({ error: "Forbidden: Only facilitators can update courses" });
+    }
+
+    const { courseId, courseName, courseDescription, courseCredits } = req.body;
+    
+    if (!courseId || !courseName || !courseDescription || !courseCredits) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    try {
+        await prisma.courses.update({
+            where: { CourseID: parseInt(courseId, 10) },
+            data: {
+                CourseName: courseName,
+                CourseDesc: courseDescription,
+                Credits: parseInt(courseCredits, 10)
+            }
+        });
+
+        res.send(`<div class='text-green-600 font-bold'>Course updated successfully!</div>`); // HTMX response
+    } catch (error) {
+        console.error("Error updating course:", error);
+        res.status(500).json({ error: "Failed to update course" });
     }
 });
 
