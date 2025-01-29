@@ -120,6 +120,41 @@ router.get("/edit-course-form/:id", async (req, res) => {
     }
 });
 
+// Unenrolling a student
+router.post("/unenroll", async (req, res) => {
+    console.log("Unenroll request received:", req.body); // Debugging
+
+    const { studentId, courseId } = req.body;
+
+    // Convert to numbers and log the results
+    const parsedStudentId = Number(studentId);
+    const parsedCourseId = Number(courseId);
+    console.log("Parsed studentId:", parsedStudentId, "Parsed courseId:", parsedCourseId); // Debugging
+
+    if (isNaN(parsedStudentId) || isNaN(parsedCourseId)) {
+        return res.status(400).json({ error: "Invalid student ID or course ID", received: req.body });
+    }
+
+    try {
+        const deleted = await prisma.enrollments.deleteMany({
+            where: {
+                StudentID: parsedStudentId,
+                CourseID: parsedCourseId,
+            },
+        });
+
+        if (deleted.count > 0) {
+            console.log(`Student ${parsedStudentId} unenrolled from course ${parsedCourseId}`);
+            return res.json({ success: true, message: "Student successfully removed" });
+        } else {
+            return res.status(404).json({ success: false, error: "Enrollment not found" });
+        }
+    } catch (error) {
+        console.error("Error unenrolling student:", error);
+        res.status(500).json({ success: false, error: "Failed to remove student" });
+    }
+});
+
 
 router.post("/courses/update", async (req, res) => {
     if (!req.session.user || !req.session.user.isFacilitator) {

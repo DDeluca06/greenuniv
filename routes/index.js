@@ -205,12 +205,13 @@ router.get('/course/:id', async (req, res) => {
 
         const enrolledStudents = course.Enrollments.map(enrollment => ({
             StudentName: `${enrollment.Students.FirstName} ${enrollment.Students.LastName}`,
+            StudentID: enrollment.Students.StudentID
         }));
 
         res.render('partials/courseDetails', {
             course,
             enrolledStudents,
-            user: req.session.user // ✅ Ensure user is passed
+            user: req.session.user // Ensure user is passed
         });
     } catch (error) {
         console.error('Error fetching course details:', error);
