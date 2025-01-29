@@ -7,11 +7,12 @@
   </head>  
   <% if (user && user.isFacilitator) { %>
     <button hx-get="/api/edit-course-form/<%= course.CourseID %>"
-            hx-target="#edit-course-modal-content"
-            hx-swap="innerHTML"
-            class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
-       Edit Course
-    </button>
+        hx-target="#edit-course-modal-content"
+        hx-swap="innerHTML"
+        hx-on::after-request="openEditModal()"
+        class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
+   Edit Course
+</button>
   <% } %>  
 <h3 class="text-lg font-semibold"><%= course.CourseName %></h3>
 <p class="text-gray-600"><%= course.CourseDesc %></p>
@@ -42,6 +43,12 @@
 </div>
 
 <script>
+    document.addEventListener("htmx:afterSwap", function(event) {
+        if (event.detail.target.id === "edit-course-modal-content") {
+            document.getElementById("edit-course-modal").classList.remove("hidden");
+        }
+    });
+    
     function openEditModal() {
         document.getElementById("edit-course-modal").classList.remove("hidden");
     }
