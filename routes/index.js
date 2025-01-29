@@ -7,7 +7,7 @@ import prisma from "../config/db.js"; // Updated to use Prisma
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const validPages = ['dash', 'dashboard', 'courses', 'assignments', 'payments', 'settings', 'admin'];
+const validPages = ['dash', 'dashboard', 'courses', 'assignments', 'payments', 'settings', 'admin', 'facil'];
 /* --------------------------------- Routing -------------------------------- */
 
 // Main Route
@@ -22,7 +22,6 @@ router.get('/', async (req, res) => {
 
 router.get("/courses", async (req, res) => {
     try {
-        console.log("Session Data:", req.session); // Debugging session data
 
         const userId = req.session.userId; // Ensure session holds user ID
         if (!userId) {
@@ -51,8 +50,6 @@ router.get("/courses", async (req, res) => {
         // ✅ Extract CourseIDs from the Enrollments array
         const enrolledCourseIds = user.Enrollments?.map(enrollment => enrollment.CourseID) || [];
 
-        console.log("User Enrolled Course IDs:", enrolledCourseIds); // Final Debugging Output
-
         res.render("courses", {
             user: {
                 id: user.StudentID,
@@ -60,6 +57,7 @@ router.get("/courses", async (req, res) => {
                 FirstName: user.FirstName,
                 LastName: user.LastName,
                 isAdmin: user.isAdmin,
+                isFacilitator: user.isFacilitator,
                 enrolledCourses: enrolledCourseIds  // ✅ Ensure enrolledCourses is included
             },
             courses,

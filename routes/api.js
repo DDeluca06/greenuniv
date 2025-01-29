@@ -1,5 +1,6 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt"; // Ensure bcrypt is installed
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -12,10 +13,10 @@ router.post("/users", async (req, res) => {
     if (!firstname || !lastname || !email || !password) {
         return res.status(400).json({ error: "Missing required fields" });
     }
-
+        const hashedPassword = await bcrypt.hash(password, 10);
     try {
         const user = await prisma.students.create({
-            data: { FirstName: firstname, LastName: lastname, Email: email, Password: password }
+            data: { FirstName: firstname, LastName: lastname, Email: email, Password: hashedPassword }
         });
 
         res.status(201).json({ message: "User created successfully", user });
@@ -65,6 +66,30 @@ router.post("/enroll", async (req, res) => {
     } catch (error) {
         console.error("Database error:", error);
         res.status(500).json({ error: "Failed to enroll in course", details: error.message });
+    }
+});
+
+// Courses creation route
+router.post("/courses", async (req, res) => {
+    console.log("Received request body:", req.body); // Debugging log
+
+    const { courseName, courseDescription, courseCredits } = req.body;
+    if (!courseName || !courseDescription || !courseCredits) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    try {
+        const course = await prisma.courses.create({
+            data: {
+                CourseName: courseName,
+                CourseDesc: courseDescription,
+                Credits: parseInt(courseCredits),
+            },
+        });
+        res.status(201).json({ message: "Course created successfully", course });
+    } catch (error) {
+        console.error("Database error:", error); // Log the specific error
+        res.status(500).json({ error: "Failed to create course" });
     }
 });
 

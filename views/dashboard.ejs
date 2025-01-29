@@ -22,10 +22,14 @@
             <button hx-get="/partials/dash" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Dashboard</button>
             <button hx-get="/partials/courses" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Courses</button>
             <button hx-get="/partials/settings" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Settings</button>
+            <% if (locals.user && user.isFacilitator) { %> <!-- Facilitator check -->
+            <button hx-get="/partials/facil" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Facilitator</button>
+            <% } %>
             <% if (locals.user && user.isAdmin) { %> <!-- Admin check -->
             <button hx-get="/partials/admin" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Admin</button>
             <% } %>
-            <!-- End of admin check -->
+            <button id="logout-button" hx-target="this" hx-swap-oob="true" hx-trigger="click" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Log Out</button>
+            <!-- End of checks -->
           </nav>
         </div>
       </aside>
@@ -37,6 +41,31 @@
       </main>
     </div>
   </body>
+  <!-- Yes, yes, yes. Inline JavaScript is bad. I stopped caring 2 commits ago. -->
+   <!-- Does the code run? Oh, it does? Does it do what it's supposed to do? Then it's staying. -->
+  <script>
+    document.getElementById("logout-button").addEventListener("click", async function () {
+  try {
+    const response = await fetch("/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      // Redirect to the login page
+      window.location.href = "/";
+    } else {
+      // Handle error if logout fails
+      showErrorMessage("Logout failed. Please try again.");
+    }
+  } catch (error) {
+    // Handle network or server errors
+    showErrorMessage("An error occurred. Please try again later.");
+  }
+});
+  </script>
   <!-- <script src="/js/spinner.js"></script> -->
   <!-- Uncomment this line to include the spinner script! -->
 </html>

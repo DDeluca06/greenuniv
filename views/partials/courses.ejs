@@ -23,7 +23,8 @@
           data-course-id="<%= course.CourseID %>"
           <%= isEnrolled ? 'disabled' : '' %>>
           <%= isEnrolled ? 'Enrolled' : 'Enroll' %>
-        </button>        
+        </button>
+        <% if (user.isFacilitator || user.isAdmin) { %> <p> Course ID: <%= course.CourseID %></p> <% } %>
       </div>      
     <% }); %> <% } else { %>
     <p>No courses available at the moment.</p>

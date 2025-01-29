@@ -29,7 +29,8 @@ router.post("/login", async (req, res) => {
       Email: existingUser.Email,
       FirstName: existingUser.FirstName,
       LastName: existingUser.LastName,
-      isAdmin: existingUser.isAdmin
+      isAdmin: existingUser.isAdmin,
+      isFacilitator: existingUser.isFacilitator // Added this line
     };
     req.session.isLoggedIn = true;
 
@@ -85,11 +86,19 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-// Log Out Route
+// Logout Route
 router.post("/logout", (req, res) => {
   req.session.destroy(err => {
-    if (err) return res.redirect('/dashboard');
-    res.redirect('/');
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.redirect('/dashboard');  // Redirect back to dashboard if session destroy fails
+    }
+
+    // Clear cookies on the client-side (just in case they aren't automatically cleared)
+    res.clearCookie('connect.sid');  // Assuming you're using the default session cookie name
+    
+    // Redirect to the login page or home page after logout
+    res.redirect('/');  // Redirect to the login page after logout
   });
 });
 
