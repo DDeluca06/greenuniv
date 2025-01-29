@@ -1,0 +1,58 @@
+<div class="bg-white shadow rounded-lg p-6">
+  <h2 class="text-2xl font-bold mb-4">Facilitator Panel</h2>
+  <span class="mr-4">You are signed in as: <%= user.FirstName %> <%= user.LastName %></span>
+  <div class="flex flex-col space-y-4">
+    <div class="admin-actions bg-gray-100 p-4 rounded-lg">
+      <h2 class="text-lg font-bold mb-2">Edit Course</h2>
+      <form action="/api/courses" method="post" class="flex flex-col space-y-2" id="course-form">
+        <div class="flex flex-col space-y-1">
+          <label for="course-id" class="text-sm font-medium">Course ID:</label>
+          <input type="text" id="course-id" name="courseId" class="p-2 border border-gray-300 rounded-lg" />
+        </div>
+        <div class="flex flex-col space-y-1">
+          <label for="course-name" class="text-sm font-medium">Course Name:</label>
+          <input type="text" id="course-name" name="courseName" class="p-2 border border-gray-300 rounded-lg" />
+        </div>
+        <div class="flex flex-col space-y-1">
+          <label for="course-description" class="text-sm font-medium">Course Description:</label>
+          <textarea id="course-description" name="courseDescription" class="p-2 border border-gray-300 rounded-lg"></textarea>
+        </div>
+        <div class="flex flex-col space-y-1">
+          <label for="course-credits" class="text-sm font-medium">Course Credits:</label>
+          <input type="number" id="course-credits" name="courseCredits" class="p-2 border border-gray-300 rounded-lg" />
+        </div>
+        <input type="submit" value="Update Course" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg" />
+      </form>
+    </div>
+    <div class="admin-actions bg-gray-100 p-4 rounded-lg">
+      <h2 class="text-lg font-bold mb-2">Delete Course</h2>
+      <form action="/api/courses" method="delete" class="flex flex-col space-y-2" id="delete-course-form">
+        <div class="flex flex-col space-y-1">
+          <label for="course-id" class="text-sm font-medium">Course ID:</label>
+          <input type="text" id="course-id" name="courseId" class="p-2 border border-gray-300 rounded-lg" />
+        </div>
+        <input type="submit" value="Delete Course" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg" />
+      </form>
+    </div>
+    <div class="admin-actions bg-gray-100 p-4 rounded-lg">
+  <h2 class="text-lg font-bold mb-2">Enrolled Users</h2>
+  <form action="/api/courses/enrolled-users" method="get" class="flex flex-col space-y-2" id="enrolled-users-form">
+    <div class="flex flex-col space-y-1">
+      <label for="course-id" class="text-sm font-medium">Course ID:</label>
+      <input type="text" id="course-id" name="courseId" class="p-2 border border-gray-300 rounded-lg" />
+    </div>
+    <input type="submit" value="Get Enrolled Users" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg" />
+  </form>
+  <div id="enrolled-users-list" class="mt-4"></div>
+</div>
+  </div>
+</div>
+
+<!-- Modal for feedback -->
+<div id="feedback-modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+  <div class="bg-white p-6 rounded-lg shadow-lg">
+    <h2 id="modal-title" class="text-lg font-bold"></h2>
+    <p id="modal-message"></p>
+    <button onclick="closeModal()" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Close</button>
+  </div>
+</div>

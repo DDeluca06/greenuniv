@@ -1,0 +1,73 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Greensfield University - Courses</title>
+  <link type="text/css" href="/css/dashboard.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org"></script>
+</head>
+<div class="bg-white shadow rounded-lg p-6">
+  <h2 class="text-2xl font-bold mb-4">Courses</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% if (typeof courses !== 'undefined' && courses.length > 0) { %> <% courses.forEach(course => { %>
+      <div class="bg-gray-100 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold"><%= course.CourseName %></h3>
+        <p class="text-gray-600"><%= course.CourseDesc %></p>
+        <p class="text-gray-600">Enrollment: <%= course?.Credits ?? 'N/A' %> Credit<% if (course.Credits > 1) { %>s<% } %></p>
+        <button hx-get="/course/<%= course.CourseID %>" hx-target="#main-content" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View <% const isEnrolled = Array.isArray(user.enrolledCourses) && user.enrolledCourses.includes(course.CourseID); %>
+
+          <button
+            class="enroll-button mt-2 px-4 py-2 rounded 
+              <%= isEnrolled ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-500 hover:bg-green-600 text-white' %>"   
+            data-student-id="<%= user.id %>"
+            data-course-id="<%= course.CourseID %>"
+            <%= isEnrolled ? 'disabled' : '' %>
+          >
+            <%= isEnrolled ? 'Enrolled' : 'Enroll' %> <!-- ✅ Move text inside the button -->
+          </button>         
+        <% if (user.isFacilitator || user.isAdmin) { %> <p> Course ID: <%= course.CourseID %></p> <% } %>
+      </div>      
+    <% }); %> <% } else { %>
+    <p>No courses available at the moment.</p>
+    <% } %>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.enroll-button').forEach(button => {
+  button.addEventListener('click', function(event) {
+    event.preventDefault();
+    
+    const rawStudentId = this.getAttribute('data-student-id');
+    const rawCourseId = this.getAttribute('data-course-id');
+    
+    const studentId = parseInt(rawStudentId, 10);
+    const courseId = parseInt(rawCourseId, 10);
+
+    if (isNaN(studentId) || isNaN(courseId)) {
+      alert('Invalid student or course ID. Please try again.');
+      return;
+    }
+
+    fetch('/api/enroll', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ studentId, courseId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) throw new Error(data.error);
+      
+      console.log('Enrollment successful:', data);
+      alert('Successfully enrolled in the course!');
+
+      // ✅ Force page reload to reflect enrollment status
+      window.location.reload();
+    })
+    .catch(error => {
+      console.error('Enrollment error:', error);
+      alert(error.message || 'Failed to enroll in the course.');
+    });
+  });
+});
+</script>

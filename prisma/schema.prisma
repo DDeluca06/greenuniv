@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Courses {
+  CourseID    Int           @id @default(autoincrement())
+  CourseName  String
+  CourseDesc  String?
+  CourseCode  String?        @unique(map: "sqlite_autoindex_Courses_1")
+  Credits     Int
+  CourseOwnerID Int?
+  Department  String?
+  Schedule    String?
+  Enrollments Enrollments[]
+}
+
+model Enrollments {
+  EnrollmentID   Int       @id @default(autoincrement())
+  StudentID      Int
+  CourseID       Int
+  EnrollmentDate DateTime? @default(dbgenerated("CURRENT_DATE"))
+  Grade          String?
+  Students       Students  @relation(fields: [StudentID], references: [StudentID], onDelete: Cascade, onUpdate: NoAction)
+  Courses        Courses   @relation(fields: [CourseID], references: [CourseID], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([StudentID, CourseID], map: "sqlite_autoindex_Enrollments_1")
+  @@index([StudentID], map: "idx_student_enrollments")
+  @@index([CourseID], map: "idx_course_enrollments")
+}
+
+model Fees {
+  FeeID          Int        @id @default(autoincrement())
+  StudentID      Int
+  FeeDescription String
+  Amount         Float
+  DueDate        DateTime
+  PaidStatus     String?    @default("Unpaid")
+  Students       Students   @relation(fields: [StudentID], references: [StudentID], onDelete: Cascade, onUpdate: NoAction)
+  Payments       Payments[]
+
+  @@index([StudentID], map: "idx_student_fees")
+}
+
+model Payments {
+  PaymentID     Int       @id @default(autoincrement())
+  StudentID     Int
+  FeeID         Int
+  PaymentDate   DateTime? @default(dbgenerated("CURRENT_DATE"))
+  AmountPaid    Float
+  PaymentMethod String?
+  Students      Students  @relation(fields: [StudentID], references: [StudentID], onDelete: Cascade, onUpdate: NoAction)
+  Fees          Fees      @relation(fields: [FeeID], references: [FeeID], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([StudentID], map: "idx_student_payments")
+}
+
+model Students {
+  StudentID        Int           @id @default(autoincrement())
+  FirstName        String
+  LastName         String
+  Email            String        @unique(map: "sqlite_autoindex_Students_1")
+  Password         String
+  PhoneNumber      String?
+  Address          String?
+  isAdmin          Boolean       @default(false)
+  isFacilitator    Boolean       @default(false)
+  EnrollmentStatus String?       @default("Active")
+  RegistrationDate DateTime?     @default(now())
+  Enrollments      Enrollments[]
+  Fees             Fees[]
+  Payments         Payments[]
+}

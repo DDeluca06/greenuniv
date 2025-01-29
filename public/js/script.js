@@ -7,13 +7,13 @@ document.getElementById("login-form").addEventListener("submit", async function 
   const password = document.getElementById("password").value;
 
   try {
-    // Simulate an API call
+    // Call the API
     const response = await fetch("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ Email: email, Password: password }), // Updated to match server-side expectations
     });
 
     if (response.ok) {

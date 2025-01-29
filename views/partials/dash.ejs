@@ -1,0 +1,32 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Greensfield University - Dashboard</title>
+  <link type="text/css" href="/css/dashboard.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org"></script>
+</head>
+<header class="flex items-center justify-between mb-6">
+    <h2 class="text-3xl font-semibold capitalize">Dashboard</h2>
+    <div class="flex items-center">
+      <span class="mr-4">Welcome, <%= user.FirstName %> <%= user.LastName %></span>
+    </div>
+  </header>
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="p-4 bg-white rounded shadow">
+      <h3 class="text-lg font-bold">Courses</h3>
+      <p><% if (typeof courses !== 'undefined' && courses.length > 0) { %>
+       Assigned to <%= courses.length %> course<% if (courses.length > 1) { %>s<% } %>
+        <% } else { %>
+        No courses.
+        <% } %></p>
+    </div>
+    <div class="p-4 bg-white rounded shadow">
+      <h3 class="text-lg font-bold">Announcements</h3>
+      <p><% if (typeof announcements !== 'undefined' && announcements.length > 0) { %>
+        <%= courses.length %> Announcements
+        <% } else { %>
+        No announcements.
+        <% } %></p>
+    </div>
+  </section>  
