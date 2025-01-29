@@ -85,6 +85,12 @@ To get started with the project, follow these steps:
 3. Build the project using `npm i`
 4. Launch the app using Node.JS `node app.js` OR `npx nodemon`
 
+## ENV VARIABLES
+```
+SECRET=yoursercret
+DATABASE_URL="file:../db/database.db" // This one is necessary! Do not change this unless you move the DB file!
+```
+
 For Demonstration/Dev purposes, one one of the following logins:
 ```
 FACILITATOR LOGIN:
