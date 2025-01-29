@@ -85,6 +85,28 @@ To get started with the project, follow these steps:
 3. Build the project using `npm i`
 4. Launch the app using Node.JS `node app.js` OR `npx nodemon`
 
+For Demonstration/Dev purposes, one one of the following logins:
+```
+FACILITATOR LOGIN:
+John@Doe.com
+JohnDoe
+
+ADMIN LOGIN:
+spencerfreost@gmail.com
+d~>r.!YeMd]3MM%
+```
+
+Course ID #1 will already have users enrolled. Feel free to experiment!
+
+## Tech Stack
+- Node.js
+- Express.js
+- SQLite/Prisma
+- EJS Templating Engine
+- Helmet
+- Express-Session
+- BCrypt
+
 ## Features
 * User authentication and authorization
 * Payment system
