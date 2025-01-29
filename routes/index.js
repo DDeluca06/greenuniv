@@ -20,6 +20,57 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get("/courses", async (req, res) => {
+    try {
+        console.log("Session Data:", req.session); // Debugging session data
+
+        const userId = req.session.userId; // Ensure session holds user ID
+        if (!userId) {
+            console.error("No user ID found in session!");
+            return res.redirect("/login");
+        }
+
+        // Fetch student info including enrollments
+        const user = await prisma.students.findUnique({
+            where: { StudentID: userId },
+            include: {
+                Enrollments: { // ✅ Fetch enrolled courses
+                    select: { CourseID: true }
+                }
+            }
+        });
+
+        // Fetch all available courses
+        const courses = await prisma.courses.findMany();
+
+        if (!user) {
+            console.error("User not found in database!");
+            return res.redirect("/login");
+        }
+
+        // ✅ Extract CourseIDs from the Enrollments array
+        const enrolledCourseIds = user.Enrollments?.map(enrollment => enrollment.CourseID) || [];
+
+        console.log("User Enrolled Course IDs:", enrolledCourseIds); // Final Debugging Output
+
+        res.render("courses", {
+            user: {
+                id: user.StudentID,
+                Email: user.Email,
+                FirstName: user.FirstName,
+                LastName: user.LastName,
+                isAdmin: user.isAdmin,
+                enrolledCourses: enrolledCourseIds  // ✅ Ensure enrolledCourses is included
+            },
+            courses,
+        });
+
+    } catch (error) {
+        console.error("Error fetching courses:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 // Loading our other pages
 router.get('/partials/:page', async (req, res) => {
     const { page } = req.params;
@@ -76,7 +127,21 @@ router.get('/dashboard', async (req, res) => {
         return res.redirect('/');
     }
     try {
-        res.render('dashboard', { user: req.session.user });
+        const userId = req.session.user.id;
+        const user = await prisma.students.findUnique({
+            where: { StudentID: userId },
+            include: {
+                Enrollments: {
+                    include: {
+                        Courses: true
+                    }
+                }
+            }
+        });
+
+        const courses = user.Enrollments.map(enrollment => enrollment.Courses);
+
+        res.render('dashboard', { user: req.session.user, courses });
     } catch (error) {
         console.error('Error fetching user data:', error);
         res.status(500).send('Internal Server Error');

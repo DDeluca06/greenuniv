@@ -25,66 +25,43 @@ router.post("/users", async (req, res) => {
     }
 });
 
-// Courses creation route
-router.post("/courses", async (req, res) => {
-    console.log("Received request body:", req.body); // Debugging log
-
-    const { courseName, courseDescription, courseCredits } = req.body;
-    if (!courseName || !courseDescription || !courseCredits) {
-        return res.status(400).json({ error: "Missing required fields" });
-    }
-
-    try {
-        const course = await prisma.courses.create({
-            data: {
-                CourseName: courseName,
-                CourseDesc: courseDescription,
-                Credits: parseInt(courseCredits),
-            },
-        });
-        res.status(201).json({ message: "Course created successfully", course });
-    } catch (error) {
-        console.error("Database error:", error); // Log the specific error
-        res.status(500).json({ error: "Failed to create course" });
-    }
-});
-
-// Route to get all courses
-router.get("/courses", async (req, res) => {
-    try {
-        const courses = await prisma.courses.findMany();
-        res.status(200).json(courses);
-    } catch (error) {
-        console.error("Database error:", error);
-        res.status(500).json({ error: "Failed to retrieve courses" });
-    }
-});
-
 // Route to enroll in a course
 router.post("/enroll", async (req, res) => {
-    console.log("Session user:", req.session?.user);
-    console.log("Received enrollment request headers:", JSON.stringify(req.headers, null, 2));
-    console.log("Received enrollment request body:", JSON.stringify(req.body, null, 2));
-    
-    const { studentId, courseId } = req.body;
-    
-    console.log("Parsed studentId:", studentId, "Type:", typeof studentId);
-    console.log("Parsed courseId:", courseId, "Type:", typeof courseId);
+    console.log("Received enrollment request:", req.body);
 
-    if (!studentId || !courseId) {
-        console.error("Missing required fields. Body:", req.body);
-        return res.status(400).json({ error: "Missing required fields", receivedData: { studentId, courseId } });
+    const { studentId, courseId } = req.body;
+    const parsedStudentId = Number(studentId);
+    const parsedCourseId = Number(courseId);
+
+    if (isNaN(parsedStudentId) || isNaN(parsedCourseId)) {
+        return res.status(400).json({ 
+            error: "Invalid student ID or course ID",
+            received: { studentId, courseId }
+        });
     }
 
     try {
+        const existingEnrollment = await prisma.enrollments.findUnique({
+            where: {
+                StudentID_CourseID: { StudentID: parsedStudentId, CourseID: parsedCourseId }
+            }
+        });
+
+        if (existingEnrollment) {
+            return res.status(409).json({ error: "Student is already enrolled in this course" });
+        }
+
         const enrollment = await prisma.enrollments.create({
             data: {
-                StudentID: parseInt(studentId, 10),
-                CourseID: parseInt(courseId, 10),
-            },
+                StudentID: parsedStudentId,
+                CourseID: parsedCourseId,
+                EnrollmentDate: new Date()
+            }
         });
+
         console.log("Enrollment created:", enrollment);
         res.status(201).json({ message: "Successfully enrolled", enrollment });
+
     } catch (error) {
         console.error("Database error:", error);
         res.status(500).json({ error: "Failed to enroll in course", details: error.message });

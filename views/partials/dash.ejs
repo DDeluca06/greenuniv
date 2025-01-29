@@ -16,17 +16,9 @@
     <div class="p-4 bg-white rounded shadow">
       <h3 class="text-lg font-bold">Courses</h3>
       <p><% if (typeof courses !== 'undefined' && courses.length > 0) { %>
-        <%= courses.length %> Assignments
+       Assigned to <%= courses.length %> course<% if (courses.length > 1) { %>s<% } %>
         <% } else { %>
         No courses.
-        <% } %></p>
-    </div>
-    <div class="p-4 bg-white rounded shadow">
-      <h3 class="text-lg font-bold">Assignments</h3>
-      <p><% if (typeof assignments !== 'undefined' && assignments.length > 0) { %>
-        <%= courses.length %> Assignments
-        <% } else { %>
-        No assignments.
         <% } %></p>
     </div>
     <div class="p-4 bg-white rounded shadow">
@@ -35,14 +27,6 @@
         <%= courses.length %> Announcements
         <% } else { %>
         No announcements.
-        <% } %></p>
-    </div>
-    <div class="p-4 bg-white rounded shadow">
-      <h3 class="text-lg font-bold">Due Fees</h3>
-      <p><% if (typeof fees !== 'undefined' && fees.length > 0) { %>
-        $<%= fees.length %>
-        <% } else { %>
-        No fees!
         <% } %></p>
     </div>
   </section>  

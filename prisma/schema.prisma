@@ -13,6 +13,7 @@ model Courses {
   CourseDesc  String?
   CourseCode  String?        @unique(map: "sqlite_autoindex_Courses_1")
   Credits     Int
+  CourseOwnerID Int?
   Department  String?
   Schedule    String?
   Enrollments Enrollments[]
@@ -67,6 +68,7 @@ model Students {
   PhoneNumber      String?
   Address          String?
   isAdmin          Boolean       @default(false)
+  isFacilitator    Boolean       @default(false)
   EnrollmentStatus String?       @default("Active")
   RegistrationDate DateTime?     @default(now())
   Enrollments      Enrollments[]
