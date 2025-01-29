@@ -7,7 +7,7 @@ import prisma from "../config/db.js"; // Updated to use Prisma
 const router = express.Router();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const validPages = ['dash', 'dashboard', 'courses', 'assignments', 'payments', 'settings'];
+const validPages = ['dash', 'dashboard', 'courses', 'assignments', 'payments', 'settings', 'admin'];
 /* --------------------------------- Routing -------------------------------- */
 
 // Main Route
@@ -27,7 +27,7 @@ router.get('/partials/:page', async (req, res) => {
     if (validPages.includes(page)) {
         try {
             let data = {
-                user: req.session?.user || null // Always include user data
+                user: req.session?.user || null // Always include session user data
             };
             
             switch (page) {
@@ -39,23 +39,27 @@ router.get('/partials/:page', async (req, res) => {
                     break;
                 case 'settings':
                 case 'dash':
-                case 'dashboard':
-                    if (!req.session?.user) {
-                        return res.redirect('/');
-                    }
-                    data.user = await prisma.students.findUnique({
-                        where: { StudentID: req.session.user.id },
-                    });
+                    case 'dashboard':
+                        if (!req.session?.user) {
+                            return res.redirect('/');
+                        }
+                        data.additionalUserData = await prisma.students.findUnique({
+                            where: { StudentID: req.session.user.id },
+                        });
+                        // Add this line to fetch the course data
+                        data.course = await prisma.courses.findFirst();
                     break;
                 case 'admin':
                     if (!req.session?.user?.isAdmin) {
                         return res.redirect('/');
                     }
-                    data.user = await prisma.students.findUnique({
+                    // Instead of overwriting user, add additional data
+                    data.additionalUserData = await prisma.students.findUnique({
                         where: { StudentID: req.session.user.id },
                     });
                     break;
             }
+            console.log('Data being passed to template:', data); // Add this log
             return res.render(`partials/${page}`, data);
         } catch (error) {
             console.error(`Error fetching data for ${page}:`, error);

@@ -25,8 +25,8 @@
             <button hx-get="/partials/payments" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Payments</button>
             <button hx-get="/partials/settings" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Settings</button>
             <% if (locals.user && user.isAdmin) { %> <!-- Admin check -->
-              <button hx-get="/partials/admin" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Admin</button>
-          <% } %>
+            <button hx-get="/partials/admin" hx-target="#main-content" class="block w-full text-left py-2 px-4 rounded hover:bg-blue-700">Admin</button>
+            <% } %>
             <!-- End of admin check -->
           </nav>
         </div>

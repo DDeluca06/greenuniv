@@ -16,11 +16,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 dotenv.config();
 /* --------------------------------- Middlewares -------------------------------- */
-// Error Handling
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
 // Set up session management
 app.use(session({
   secret: process.env.SECRET,
@@ -35,7 +30,7 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.tailwindcss.com", "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tailwindcss.com", "https://unpkg.com/htmx.org", "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"],
-      imgSrc: ["'self'", "data:", "https://pbs.twimg.com"],
+      "script-src-attr": ["'self'", "'unsafe-inline'"], // Allow inline event handlers
       connectSrc: ["'self'"],
     },
   },
@@ -49,6 +44,11 @@ app.set("views", path.join(__dirname, "views"));
 app.use("/", routes);
 app.use("/", accroutes);
 app.use("/api", apiroute);
+// Error Handling
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 /* --------------------------------- Database -------------------------------- */
 prisma.$connect()
     .then(() => {

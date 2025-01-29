@@ -1,40 +1,113 @@
-/* ------------------------------- Imports ------------------------------- */
 import express from "express";
-import db from "../config/db.js";
-/* -------------------------------- Constants ------------------------------- */
+import { PrismaClient } from "@prisma/client";
+
 const router = express.Router();
-/* ----------------------------------- API ---------------------------------- */
-// Fetch courses
-router.get('/courses', (req, res) => {
-    if (!req.session.isLoggedIn) {
-        return res.status(401).json({ error: 'Unauthorized' });
+const prisma = new PrismaClient();
+
+// Route to create a user account
+router.post("/users", async (req, res) => {
+    console.log("Received request body:", req.body); // Debugging log
+
+    const { firstname, lastname, email, password } = req.body;
+    if (!firstname || !lastname || !email || !password) {
+        return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // We're going to replace this with a real DB query later
-    // ^^ NO WE'RE NOT
-    const courses = [
-        { id: 1, name: "Introduction to Psychology" },
-        { id: 2, name: "Advanced Calculus" },
-        { id: 3, name: "World History" },
-        { id: 4, name: "Computer Science 101" },
-    ];
-    res.json(courses);
+    try {
+        const user = await prisma.students.create({
+            data: { FirstName: firstname, LastName: lastname, Email: email, Password: password }
+        });
+
+        res.status(201).json({ message: "User created successfully", user });
+    } catch (error) {
+        console.error("Database error:", error);
+        res.status(500).json({ error: "Failed to create user" });
+    }
 });
 
-// Fetch assignments
-router.get('/assignments', (req, res) => {
-    if (!req.session.isLoggedIn) {
-        return res.status(401).json({ error: 'Unauthorized' });
+// Courses creation route
+router.post("/courses", async (req, res) => {
+    console.log("Received request body:", req.body); // Debugging log
+
+    const { courseName, courseDescription, courseCredits } = req.body;
+    if (!courseName || !courseDescription || !courseCredits) {
+        return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Replace with database query
-    // ^^ (no we're not)
-    const assignments = [
-        { id: 1, title: "Psychology Essay", dueDate: "2025-02-01" },
-        { id: 2, title: "Calculus Homework", dueDate: "2025-01-30" },
-        { id: 3, title: "Assignment #3", dueDate: "2025-03-16" },
-    ];
-    res.json(assignments);
+    try {
+        const course = await prisma.courses.create({
+            data: {
+                CourseName: courseName,
+                CourseDesc: courseDescription,
+                Credits: parseInt(courseCredits),
+            },
+        });
+        res.status(201).json({ message: "Course created successfully", course });
+    } catch (error) {
+        console.error("Database error:", error); // Log the specific error
+        res.status(500).json({ error: "Failed to create course" });
+    }
+});
+
+// Route to get all courses
+router.get("/courses", async (req, res) => {
+    try {
+        const courses = await prisma.courses.findMany();
+        res.status(200).json(courses);
+    } catch (error) {
+        console.error("Database error:", error);
+        res.status(500).json({ error: "Failed to retrieve courses" });
+    }
+});
+
+// Route to enroll in a course
+router.post("/enroll", async (req, res) => {
+    console.log("Session user:", req.session?.user);
+    console.log("Received enrollment request headers:", JSON.stringify(req.headers, null, 2));
+    console.log("Received enrollment request body:", JSON.stringify(req.body, null, 2));
+    
+    const { studentId, courseId } = req.body;
+    
+    console.log("Parsed studentId:", studentId, "Type:", typeof studentId);
+    console.log("Parsed courseId:", courseId, "Type:", typeof courseId);
+
+    if (!studentId || !courseId) {
+        console.error("Missing required fields. Body:", req.body);
+        return res.status(400).json({ error: "Missing required fields", receivedData: { studentId, courseId } });
+    }
+
+    try {
+        const enrollment = await prisma.enrollments.create({
+            data: {
+                StudentID: parseInt(studentId, 10),
+                CourseID: parseInt(courseId, 10),
+            },
+        });
+        console.log("Enrollment created:", enrollment);
+        res.status(201).json({ message: "Successfully enrolled", enrollment });
+    } catch (error) {
+        console.error("Database error:", error);
+        res.status(500).json({ error: "Failed to enroll in course", details: error.message });
+    }
+});
+
+// Route to create a fee
+router.post("/fees", async (req, res) => {
+    const { feeUser, feeName, feeAmount, feeDate } = req.body;
+    try {
+        const fee = await prisma.fees.create({
+            data: {
+                StudentID: feeUser,
+                FeeDescription: feeName,
+                Amount: feeAmount,
+                DueDate: feeDate, 
+            },
+        });
+        res.status(201).json({ message: "Fee created successfully", fee });
+    } catch (error) {
+        console.error("Database error:", error);
+        res.status(500).json({ error: "Failed to create fee" });
+    }
 });
 
 export default router;

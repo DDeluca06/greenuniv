@@ -74,7 +74,7 @@ router.post("/signup", async (req, res) => {
         LastName,
         Email: lowercasedEmail,
         Password: hashedPassword,
-        isAdmin: true,
+        isAdmin: false,
       },
     });
 

@@ -1,16 +1,71 @@
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Greensfield University - Dashboard</title>
+  <link type="text/css" href="/css/dashboard.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org"></script>
+</head>
 <div class="bg-white shadow rounded-lg p-6">
-    <h2 class="text-2xl font-bold mb-4">Courses</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <% if (typeof courses !== 'undefined' && courses.length > 0) { %>
-        <% courses.forEach(course => { %>
-          <div class="bg-gray-100 p-4 rounded-lg">
-            <h3 class="text-lg font-semibold"><%= course.title %></h3>
-            <p class="text-gray-600"><%= course.description %></p>
-            <button hx-get="/course/<%= course.id %>" hx-target="#main-content" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Details</button>
-          </div>
-        <% }); %>
-      <% } else { %>
-        <p>No courses available at the moment.</p>
-      <% } %>
+  <h2 class="text-2xl font-bold mb-4">Courses</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% if (typeof courses !== 'undefined' && courses.length > 0) { %> <% courses.forEach(course => { %>
+    <div class="bg-gray-100 p-4 rounded-lg">
+      <h3 class="text-lg font-semibold"><%= course.CourseName %></h3>
+      <p class="text-gray-600"><%= course.CourseDescription %></p>
+      <p class="text-gray-600">Enrollment: <%= course?.Credits ?? 'N/A' %> Credit<% if (course.Credits > 1) { %>s<% } %></p>
+      <button hx-get="/course/<%= course.id %>" hx-target="#main-content" class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">View Details</button>
+      <p id="debugInfo" style="display:none;">User ID: <%= user.StudentID %>, Course ID: <%= course.CourseID %></p>
+      <button 
+      id="enrollButton"
+      data-student-id="<%= user.id %>"
+      data-course-id="<%= course.CourseID %>"
+      class="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+      Enroll
+    </button>
     </div>
+    <% }); %> <% } else { %>
+    <p>No courses available at the moment.</p>
+    <% } %>
   </div>
+</div>
+
+<script>
+document.getElementById('enrollButton').addEventListener('click', function(event) {
+    event.preventDefault();
+    const studentId = parseInt(this.getAttribute('data-student-id'), 10);
+    const courseId = parseInt(this.getAttribute('data-course-id'), 10);
+    
+    console.log('Enrollment data:', { studentId, courseId });
+
+    if (isNaN(studentId) || isNaN(courseId)) {
+      console.error('Invalid studentId or courseId');
+      return;
+    }
+
+    fetch('/api/enroll', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ studentId, courseId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Server response:', data);
+      // Handle success (e.g., show a success message)
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      // Handle error (e.g., show an error message)
+    });
+  });
+
+  document.body.addEventListener("htmx:configRequest", function (event) {
+    console.log("HTMX Request Config:", event.detail);
+  });
+
+  document.body.addEventListener("htmx:beforeRequest", function (event) {
+    console.log("HTMX Before Request:", event.detail);
+  });
+</script>

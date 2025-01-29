@@ -10,10 +10,11 @@ datasource db {
 model Courses {
   CourseID    Int           @id @default(autoincrement())
   CourseName  String
-  CourseCode  String        @unique(map: "sqlite_autoindex_Courses_1")
+  CourseDesc  String?
+  CourseCode  String?        @unique(map: "sqlite_autoindex_Courses_1")
   Credits     Int
-  Department  String
-  Schedule    String
+  Department  String?
+  Schedule    String?
   Enrollments Enrollments[]
 }
 
