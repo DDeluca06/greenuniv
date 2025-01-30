@@ -88,7 +88,7 @@ To get started with the project, follow these steps:
 ## ENV VARIABLES
 ```
 SECRET=yoursercret
-DATABASE_URL="file:../db/database.db" // This one is necessary! Do not change this unless you move the DB file!
+DATABASE_URL="file:../db/database.db" # This one is necessary! Do not change this unless you move the DB file!
 ```
 
 For Demonstration/Dev purposes, one one of the following logins:
